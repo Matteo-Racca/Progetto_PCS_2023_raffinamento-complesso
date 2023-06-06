@@ -10,7 +10,7 @@ using namespace std;
 int main()
 {
     // numero di volte che vogliamo iterare il raffinamento
-    int theta = 10000;
+    double theta = 0.001;
 
 
     // import di vertici, lati e triangoli che compongono la mesh
@@ -22,12 +22,8 @@ int main()
     vector<Triangles> triangles = ImportTriangles(nameFileTriangles, vertices);
 
 
-    //chiamata della funzione per il raffinamento complesso
-    for(int i=0; i<theta; i++)
-    {
-        cout<<"iterazione numero: "<<i+1<<"\n";
-        raffinamentoComplesso(vertices, edges, triangles);
-    }
+    raffinamentoComplesso(theta, vertices, edges, triangles);
+
 
 
     //stampa del file di output dei vertici

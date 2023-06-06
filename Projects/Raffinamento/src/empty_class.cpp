@@ -374,62 +374,70 @@ namespace ProjectLibrary
     }
 
 
-    void raffinamentoComplesso(vector<Vertices>& vertices, vector<Edges>& edges, vector<Triangles>& triangles)
+    void raffinamentoComplesso(const double& theta, vector<Vertices>& vertices, vector<Edges>& edges, vector<Triangles>& triangles)
     {
         Triangles triangleToRefine = findTriangleMaxArea(triangles);
-        int idTriangleToRefine = triangleToRefine.id;
+        int iter = 1;
 
-        Edges maxLengthEdge = triangleToRefine.FindMaxEdge(edges);
-        int idMaxLengthEdge = maxLengthEdge.id;
-
-        int idPrecMidPoint;
-        int idPrecFirstHalf;
-        int idPrecSecondHalf;
-
-        vector<int> adiacenceMaxEdge = divideTriangleIn2(triangleToRefine, maxLengthEdge, idPrecMidPoint, idPrecFirstHalf, idPrecSecondHalf, vertices, edges, triangles);
-
-        while(adiacenceMaxEdge.size() == 2)
+        while(triangleToRefine.area > theta)
         {
-            Triangles secondTriangleToRefine(0, 0, 0, 0, 0, 0, 0, true, vertices);
-            if(adiacenceMaxEdge[0] == idTriangleToRefine)
+            cout<<"iterazione numero: "<<iter++<<"\n";
+            int idTriangleToRefine = triangleToRefine.id;
+
+            Edges maxLengthEdge = triangleToRefine.FindMaxEdge(edges);
+            int idMaxLengthEdge = maxLengthEdge.id;
+
+            int idPrecMidPoint;
+            int idPrecFirstHalf;
+            int idPrecSecondHalf;
+
+            vector<int> adiacenceMaxEdge = divideTriangleIn2(triangleToRefine, maxLengthEdge, idPrecMidPoint, idPrecFirstHalf, idPrecSecondHalf, vertices, edges, triangles);
+
+            while(adiacenceMaxEdge.size() == 2)
             {
-                secondTriangleToRefine = triangles[adiacenceMaxEdge[1]];
+                Triangles secondTriangleToRefine(0, 0, 0, 0, 0, 0, 0, true, vertices);
+                if(adiacenceMaxEdge[0] == idTriangleToRefine)
+                {
+                    secondTriangleToRefine = triangles[adiacenceMaxEdge[1]];
+                }
+                else if(adiacenceMaxEdge[1] == idTriangleToRefine)
+                {
+                    secondTriangleToRefine = triangles[adiacenceMaxEdge[0]];
+                }
+
+                int idSecondTriangleToRefine = secondTriangleToRefine.id;
+
+                Edges secondMaxLengthEdge = secondTriangleToRefine.FindMaxEdge(edges);
+                int idSecondMaxLengthEdge = secondMaxLengthEdge.id;
+
+                if(idSecondMaxLengthEdge == idMaxLengthEdge)
+                {
+                    int idOppositeVertex = findOppositeIdVertices(secondMaxLengthEdge, secondTriangleToRefine);
+                    edges.push_back(Edges(edges.size(), 0, idPrecMidPoint, idOppositeVertex, true, vertices));
+                    int idConjunction = edges[edges.size()-1].id;
+
+                    triangles.push_back(Triangles(triangles.size(), maxLengthEdge.idStart, idPrecMidPoint, idOppositeVertex, idPrecFirstHalf, idConjunction, findIdEdgeBetweenVertices(maxLengthEdge.idStart, idOppositeVertex, secondTriangleToRefine, edges), true, vertices));
+                    int idTriangleFirstHalf = triangles[triangles.size()-1].id;
+                    triangles.push_back(Triangles(triangles.size(), maxLengthEdge.idEnd, idPrecMidPoint, idOppositeVertex, idPrecSecondHalf, idConjunction, findIdEdgeBetweenVertices(maxLengthEdge.idEnd, idOppositeVertex, secondTriangleToRefine, edges), true, vertices));
+                    int idTriangleSecondHalf = triangles[triangles.size()-1].id;
+
+
+                    triangles[idSecondTriangleToRefine].inMesh = false;
+
+                    break;
+                }
+                else
+                {
+                    adiacenceMaxEdge = divideTriangleIn3(secondTriangleToRefine, secondMaxLengthEdge, maxLengthEdge, idPrecMidPoint, idPrecFirstHalf, idPrecSecondHalf, vertices, edges, triangles);
+                }
+
+                triangleToRefine = secondTriangleToRefine;
+                idTriangleToRefine = idSecondTriangleToRefine;
+                maxLengthEdge = secondMaxLengthEdge;
+                idMaxLengthEdge = idSecondMaxLengthEdge;
             }
-            else if(adiacenceMaxEdge[1] == idTriangleToRefine)
-            {
-                secondTriangleToRefine = triangles[adiacenceMaxEdge[0]];
-            }
 
-            int idSecondTriangleToRefine = secondTriangleToRefine.id;
-
-            Edges secondMaxLengthEdge = secondTriangleToRefine.FindMaxEdge(edges);
-            int idSecondMaxLengthEdge = secondMaxLengthEdge.id;
-
-            if(idSecondMaxLengthEdge == idMaxLengthEdge)
-            {
-                int idOppositeVertex = findOppositeIdVertices(secondMaxLengthEdge, secondTriangleToRefine);
-                edges.push_back(Edges(edges.size(), 0, idPrecMidPoint, idOppositeVertex, true, vertices));
-                int idConjunction = edges[edges.size()-1].id;
-
-                triangles.push_back(Triangles(triangles.size(), maxLengthEdge.idStart, idPrecMidPoint, idOppositeVertex, idPrecFirstHalf, idConjunction, findIdEdgeBetweenVertices(maxLengthEdge.idStart, idOppositeVertex, secondTriangleToRefine, edges), true, vertices));
-                int idTriangleFirstHalf = triangles[triangles.size()-1].id;
-                triangles.push_back(Triangles(triangles.size(), maxLengthEdge.idEnd, idPrecMidPoint, idOppositeVertex, idPrecSecondHalf, idConjunction, findIdEdgeBetweenVertices(maxLengthEdge.idEnd, idOppositeVertex, secondTriangleToRefine, edges), true, vertices));
-                int idTriangleSecondHalf = triangles[triangles.size()-1].id;
-
-
-                triangles[idSecondTriangleToRefine].inMesh = false;
-
-                break;
-            }
-            else
-            {
-                adiacenceMaxEdge = divideTriangleIn3(secondTriangleToRefine, secondMaxLengthEdge, maxLengthEdge, idPrecMidPoint, idPrecFirstHalf, idPrecSecondHalf, vertices, edges, triangles);
-            }
-
-            triangleToRefine = secondTriangleToRefine;
-            idTriangleToRefine = idSecondTriangleToRefine;
-            maxLengthEdge = secondMaxLengthEdge;
-            idMaxLengthEdge = idSecondMaxLengthEdge;
+            triangleToRefine = findTriangleMaxArea(triangles);
         }
     }
 
