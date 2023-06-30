@@ -41,8 +41,8 @@ namespace ProjectLibrary
             int marker;
             int idStart;
             int idEnd;
-            bool inMesh;
             double length;
+            bool inMesh;
 
             static constexpr double geometricTol = 1.0e-12;
 
@@ -68,8 +68,9 @@ namespace ProjectLibrary
             int idE1;
             int idE2;
             int idE3;
-            bool inMesh;
             double area;
+            bool inMesh;
+
 
             static constexpr double geometricTol = 1.0e-12;
             static constexpr double geometricTol_Squared = max_tolerance(Triangles::geometricTol * Triangles::geometricTol,
@@ -169,7 +170,7 @@ namespace ProjectLibrary
 
 
     vector<int> findAdiacenceEdge(const Edges& edge,
-                                        const vector<Triangles>& triangles);
+                                  const vector<Triangles>& triangles);
 
 
     int findOppositeIdVertices(const Edges& edge,
@@ -190,6 +191,7 @@ namespace ProjectLibrary
                                   vector<Vertices>& vertices,
                                   vector<Edges>& edges,
                                   vector<Triangles>& triangles);
+
 
     vector<int> divideTriangleIn3(Triangles& triangle,
                                   Edges& maxEdge,

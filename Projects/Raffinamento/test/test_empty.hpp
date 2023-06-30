@@ -313,7 +313,7 @@ TEST(TestAdiacence, TestAdiacenceEdge)
     EXPECT_EQ(adiacenceVector, exactVec);
 }
 
-TEST(TestOppositeVertex, TestOppositeVertToEdge)
+TEST(TestOppositeVertex, TestOppositeVertexToEdge)
 {
     Vertices V1(0, 0, 2, 1);
     Vertices V2(1, 0, 3, 4);
@@ -578,5 +578,6 @@ TEST(TestDivideIn3, TestDivideTriangleIn3)
     EXPECT_EQ(triangles[triangles.size()-1].idE2, triangleNew3.idE2);
     EXPECT_EQ(triangles[triangles.size()-1].idE3, triangleNew3.idE3);
 }
+
 
 #endif // __TEST_EMPTY_H

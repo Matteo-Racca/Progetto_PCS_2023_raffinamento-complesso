@@ -281,10 +281,8 @@ namespace ProjectLibrary
         edges.push_back(Edges(edges.size(), 0, idMidPoint, idOppositeVertex, true, vertices));
         int idConjunction = edges[edges.size()-1].id;
 
-        triangles.push_back(Triangles(triangles.size(), maxEdge.idStart, idMidPoint, idOppositeVertex, idFirstHalf, idConjunction, findIdEdgeBetweenVertices(maxEdge.idStart, idOppositeVertex, triangle, edges), true, vertices));
-        int idTriangleFirstHalf = triangles[triangles.size()-1].id;
+        triangles.push_back(Triangles(triangles.size(), maxEdge.idStart, idMidPoint, idOppositeVertex, idFirstHalf, idConjunction, findIdEdgeBetweenVertices(maxEdge.idStart, idOppositeVertex, triangle, edges), true, vertices));        
         triangles.push_back(Triangles(triangles.size(), maxEdge.idEnd, idMidPoint, idOppositeVertex, idSecondHalf, idConjunction, findIdEdgeBetweenVertices(maxEdge.idEnd, idOppositeVertex, triangle, edges), true, vertices));
-        int idTriangleSecondHalf = triangles[triangles.size()-1].id;
 
         edges[maxEdge.id].inMesh = false;
         triangles[triangle.id].inMesh = false;
@@ -377,11 +375,12 @@ namespace ProjectLibrary
     void raffinamentoComplesso(const double& theta, vector<Vertices>& vertices, vector<Edges>& edges, vector<Triangles>& triangles)
     {
         Triangles triangleToRefine = findTriangleMaxArea(triangles);
-        int iter = 1;
+        int iter = 0;
 
         while(triangleToRefine.area > theta)
         {
-            cout<<"iterazione numero: "<<iter++<<"\n";
+            iter++;
+
             int idTriangleToRefine = triangleToRefine.id;
 
             Edges maxLengthEdge = triangleToRefine.FindMaxEdge(edges);
@@ -416,11 +415,8 @@ namespace ProjectLibrary
                     edges.push_back(Edges(edges.size(), 0, idPrecMidPoint, idOppositeVertex, true, vertices));
                     int idConjunction = edges[edges.size()-1].id;
 
-                    triangles.push_back(Triangles(triangles.size(), maxLengthEdge.idStart, idPrecMidPoint, idOppositeVertex, idPrecFirstHalf, idConjunction, findIdEdgeBetweenVertices(maxLengthEdge.idStart, idOppositeVertex, secondTriangleToRefine, edges), true, vertices));
-                    int idTriangleFirstHalf = triangles[triangles.size()-1].id;
+                    triangles.push_back(Triangles(triangles.size(), maxLengthEdge.idStart, idPrecMidPoint, idOppositeVertex, idPrecFirstHalf, idConjunction, findIdEdgeBetweenVertices(maxLengthEdge.idStart, idOppositeVertex, secondTriangleToRefine, edges), true, vertices));                    
                     triangles.push_back(Triangles(triangles.size(), maxLengthEdge.idEnd, idPrecMidPoint, idOppositeVertex, idPrecSecondHalf, idConjunction, findIdEdgeBetweenVertices(maxLengthEdge.idEnd, idOppositeVertex, secondTriangleToRefine, edges), true, vertices));
-                    int idTriangleSecondHalf = triangles[triangles.size()-1].id;
-
 
                     triangles[idSecondTriangleToRefine].inMesh = false;
 
@@ -439,6 +435,8 @@ namespace ProjectLibrary
 
             triangleToRefine = findTriangleMaxArea(triangles);
         }
+
+        cout<<"Numero iterazioni: "<<iter<<"\n";
     }
 
 
