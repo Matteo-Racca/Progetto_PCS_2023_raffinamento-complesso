@@ -10,7 +10,7 @@ using namespace std;
 
 int main()
 {
-    double theta = 0.005;
+    int theta = 0;
 
     // import di vertici, lati e triangoli che compongono la mesh
     string nameFileVertices = ".\\Dataset\\Test1\\Cell0Ds.csv";

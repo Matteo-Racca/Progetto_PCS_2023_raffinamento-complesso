@@ -322,14 +322,12 @@ namespace ProjectLibrary
             if(maxEdge.idStart == precMaxEdge.idEnd)
             {
                 triangles.push_back(Triangles(triangles.size(), maxEdge.idEnd, idMidPoint, precMaxEdge.idStart, idSecondHalf, idSecondConjunction, findIdEdgeBetweenVertices(maxEdge.idEnd, precMaxEdge.idStart, triangle, edges), true, vertices));
-                //int
                 triangles.push_back(Triangles(triangles.size(), idMidPoint, idPrecMidPoint, maxEdge.idStart, idFirstHalf, idConjunctionMidPoint, idPrecSecondHalf, true, vertices));
                 triangles.push_back(Triangles(triangles.size(), idMidPoint, idPrecMidPoint, precMaxEdge.idStart, idSecondConjunction, idConjunctionMidPoint, idPrecFirstHalf, true, vertices));
             }
             else if(maxEdge.idEnd == precMaxEdge.idEnd)
             {
                 triangles.push_back(Triangles(triangles.size(), maxEdge.idStart, idMidPoint, precMaxEdge.idStart, idFirstHalf, idSecondConjunction, findIdEdgeBetweenVertices(maxEdge.idStart, precMaxEdge.idStart, triangle, edges), true, vertices));
-                //int
                 triangles.push_back(Triangles(triangles.size(), idMidPoint, idPrecMidPoint, maxEdge.idEnd, idSecondHalf, idConjunctionMidPoint, idPrecSecondHalf, true, vertices));
                 triangles.push_back(Triangles(triangles.size(), idMidPoint, idPrecMidPoint, precMaxEdge.idStart, idSecondConjunction, idConjunctionMidPoint, idPrecFirstHalf, true, vertices));
             }
@@ -343,14 +341,12 @@ namespace ProjectLibrary
             if(maxEdge.idStart == precMaxEdge.idStart)
             {
                 triangles.push_back(Triangles(triangles.size(), maxEdge.idEnd, idMidPoint, precMaxEdge.idEnd, idSecondHalf, idSecondConjunction, findIdEdgeBetweenVertices(maxEdge.idEnd, precMaxEdge.idEnd, triangle, edges), true, vertices));
-                //int
                 triangles.push_back(Triangles(triangles.size(), idMidPoint, idPrecMidPoint, maxEdge.idStart, idFirstHalf, idConjunctionMidPoint, idPrecFirstHalf, true, vertices));
                 triangles.push_back(Triangles(triangles.size(), idMidPoint, idPrecMidPoint, precMaxEdge.idEnd, idSecondConjunction, idConjunctionMidPoint, idPrecSecondHalf, true, vertices));
             }
             else if(maxEdge.idEnd == precMaxEdge.idStart)
             {
                 triangles.push_back(Triangles(triangles.size(), maxEdge.idStart, idMidPoint, precMaxEdge.idEnd, idFirstHalf, idSecondConjunction, findIdEdgeBetweenVertices(maxEdge.idStart, precMaxEdge.idEnd, triangle, edges), true, vertices));
-                //int
                 triangles.push_back(Triangles(triangles.size(), idMidPoint, idPrecMidPoint, maxEdge.idEnd, idSecondHalf, idConjunctionMidPoint, idPrecFirstHalf, true, vertices));
                 triangles.push_back(Triangles(triangles.size(), idMidPoint, idPrecMidPoint, precMaxEdge.idEnd, idSecondConjunction, idConjunctionMidPoint, idPrecSecondHalf, true, vertices));
             }
@@ -372,15 +368,11 @@ namespace ProjectLibrary
     }
 
 
-    void raffinamentoComplesso(const double& theta, vector<Vertices>& vertices, vector<Edges>& edges, vector<Triangles>& triangles)
+    void raffinamentoComplesso(const int& theta, vector<Vertices>& vertices, vector<Edges>& edges, vector<Triangles>& triangles)
     {
-        Triangles triangleToRefine = findTriangleMaxArea(triangles);
-        int iter = 0;
-
-        while(triangleToRefine.area > theta)
+        for(unsigned int i=0; i<theta; i++)
         {
-            iter++;
-
+            Triangles triangleToRefine = findTriangleMaxArea(triangles);
             int idTriangleToRefine = triangleToRefine.id;
 
             Edges maxLengthEdge = triangleToRefine.FindMaxEdge(edges);
@@ -432,12 +424,7 @@ namespace ProjectLibrary
                 maxLengthEdge = secondMaxLengthEdge;
                 idMaxLengthEdge = idSecondMaxLengthEdge;
             }
-
-            triangleToRefine = findTriangleMaxArea(triangles);
         }
-
-        cout<<"Numero iterazioni: "<<iter<<"\n";
     }
-
 
 }

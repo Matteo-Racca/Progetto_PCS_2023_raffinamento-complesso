@@ -204,7 +204,7 @@ namespace ProjectLibrary
                                   vector<Triangles>& triangles);
 
 
-    void raffinamentoComplesso(const double& theta,
+    void raffinamentoComplesso(const int& theta,
                                vector<Vertices>& vertices,
                                vector<Edges>& edges,
                                vector<Triangles>& triangles);
